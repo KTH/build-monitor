@@ -8,7 +8,7 @@ const rp = require('request-promise')
 
 
 ///const log = require('./server/log')
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 3001
 
 
 /* ****************************
@@ -22,7 +22,7 @@ server.start({
   ///logger: log
 })
 
-server.use(prefix + '/kth-style', express.static(path.join(__dirname, '../node_modules/kth-style/dist')))
+server.use(prefix + '/kth-style', express.static(path.join(__dirname, '/node_modules/kth-style/dist')))
 
 
 async function jenkinsApi(url) {
@@ -60,16 +60,10 @@ async function getStatusFromJenkins(req, res) {
         }
         
         return res.send(`
-        <html>
-        <title>
             <link rel="stylesheet" href="/app/build-monitor/kth-style/css/kth-bootstrap.css">
-        </title>
-        <body>
             <h2>LIST BUILDS</h2>
             ${stringDiv}  
-        </body> 
-        </html>
         `)     
 }
 
-server.get(prefix +'/list', getStatusFromJenkins)
+server.get(prefix +'/test', getStatusFromJenkins)
