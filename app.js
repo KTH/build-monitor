@@ -28,13 +28,9 @@ async function jenkinsApi(url, server) {
     {
         const data = await rp({
             url,
-            //auth : {user:'elenara', token:'', bearer:'585b61e664b7111f5365da70aaa80993'},
             resolveWithFullResponse: false,
             method: 'GET',
             json: true,
-            headers: {
-                'content-type': 'application/json'
-            }
         })
         return data.jobs
 
