@@ -21,7 +21,7 @@ server.start({
   port: PORT,
   ///logger: log
 })
-
+server.use(prefix + '/bootstrap', express.static(path.join(__dirname, '/node_modules/bootstrap/dist')))
 server.use(prefix + '/kth-style', express.static(path.join(__dirname, '/node_modules/kth-style/dist')))
 
 
@@ -55,7 +55,8 @@ async function getStatusFromJenkins(req, res) {
 
         const statusLib = {
             blue: 'alert-success',
-            red: 'alert-success' 
+            blue_anime: 'alert-primary',
+            red: 'alert-danger' 
         }
 
         let stringDiv = ''         
@@ -65,6 +66,7 @@ async function getStatusFromJenkins(req, res) {
         }
         
         return res.send(`
+            <link rel="stylesheet" href="/app/build-monitor/bootstrap/css/bootstrap.css">
             <link rel="stylesheet" href="/app/build-monitor/kth-style/css/kth-bootstrap.css">
             <h2>LIST BUILDS</h2>
             ${stringDiv}  
