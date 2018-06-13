@@ -29,6 +29,7 @@ async function jenkinsApi(url) {
         //auth : {user:'elenara', token:'', bearer:'585b61e664b7111f5365da70aaa80993'},
         resolveWithFullResponse: true,
         method: 'GET',
+        json: true,
         headers: {
             'content-type': 'application/json'
         }
@@ -37,8 +38,15 @@ async function jenkinsApi(url) {
 
 async function getStatusFromJenkins() {
     const data = await jenkinsApi(`https://${process.env.JENKINS_USER}:${process.env.JENKINS_TOKEN}@jenkins.sys.kth.se/api/json`)
-    console.log(data)
+    console.log(data.body.jobs)
+    return data
+}
+
+async function getStatusFromBuild() {
+    const data = await jenkinsApi(`https://${process.env.JENKINS_USER}:${process.env.BUILD_TOKEN}@build.sys.kth.se/api/json`)
+    console.log("holllllla", data.body.jobs)
     return data
 }
 
 getStatusFromJenkins ()
+getStatusFromBuild()
