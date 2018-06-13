@@ -8,7 +8,7 @@ const rp = require('request-promise')
 
 
 ///const log = require('./server/log')
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT || 8080
 
 
 /* ****************************
@@ -53,10 +53,15 @@ async function getStatusFromJenkins(req, res) {
 
         const filteredJobs = [...socialBuilds, ...lmsBuilds]
 
+        const statusLib = {
+            blue: 'alert-success',
+            red: 'alert-success' 
+        }
+
         let stringDiv = ''         
 
         for (let build of filteredJobs){
-            stringDiv = `${stringDiv}<div aria-live="polite" role="alert" class="alert alert-info ${build.color}"><p><b>${build.name}</b></p></div>`
+            stringDiv = `${stringDiv}<div aria-live="polite" role="alert" class="alert ${statusLib[build.color]}"><p><b>${build.name}</b></p></div>`
         }
         
         return res.send(`
