@@ -10,7 +10,6 @@ const rp = require('request-promise')
 ///const log = require('./server/log')
 const PORT = process.env.PORT || 3000
 
-server.use(prefix + '/kth-style', express.static(path.join(__dirname, '../node_modules/kth-style/dist')))
 
 /* ****************************
  * ******* SERVER START *******
@@ -22,6 +21,9 @@ server.start({
   port: PORT,
   ///logger: log
 })
+
+server.use(prefix + '/kth-style', express.static(path.join(__dirname, '../node_modules/kth-style/dist')))
+
 
 async function jenkinsApi(url) {
     try
@@ -41,24 +43,33 @@ async function jenkinsApi(url) {
     }
 }
 
-async function getStatusFromJenkins() {
+async function getStatusFromJenkins(req, res) {
 
-        const jenkinsKTH = await jenkinsApi(`https://${process.env.JENKINS_USER}:${process.env.JENKINS_TOKEN}@jenkins.sys.kth.se/api/json`)
-        
+        const jenkinsKTH = await jenkinsApi(`https://${process.env.JENKINS_USER}:${process.env.JENKINS_TOKEN}@jenkins.sys.kth.se/api/json`)        
         const socialBuilds = jenkinsKTH.filter(j => j.name == 'social-develop' || j.name == 'social-master'|| j.name == 'social-features' )
 
         const buildKTH = await jenkinsApi(`https://${process.env.JENKINS_USER}:${process.env.BUILD_TOKEN}@build.sys.kth.se/api/json`)
-
         const lmsBuilds = buildKTH.filter(j => j.name == 'lms-export-results' ||  j.name =='lms-sync-users'  || j.name == 'lms-sync-courses' || j.name == 'lms-api')
 
         const filteredJobs = [...socialBuilds, ...lmsBuilds]
 
-        console.log(filteredJobs)
+        let stringDiv = ''         
 
-        return filteredJobs
-
+        for (let build of filteredJobs){
+            stringDiv = `${stringDiv}<div aria-live="polite" role="alert" class="alert alert-info ${build.color}"><p><b>${build.name}</b></p></div>`
+        }
+        
+        return res.send(`
+        <html>
+        <title>
+            <link rel="stylesheet" href="/app/build-monitor/kth-style/css/kth-bootstrap.css">
+        </title>
+        <body>
+            <h2>LIST BUILDS</h2>
+            ${stringDiv}  
+        </body> 
+        </html>
+        `)     
 }
 
-
-
-getStatusFromJenkins ()
+server.get(prefix +'/list', getStatusFromJenkins)
