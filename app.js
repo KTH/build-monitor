@@ -23,30 +23,45 @@ server.start({
   ///logger: log
 })
 
-async function jenkinsApi(url) {
-    return rp({
-        url,
-        //auth : {user:'elenara', token:'', bearer:'585b61e664b7111f5365da70aaa80993'},
-        resolveWithFullResponse: true,
-        method: 'GET',
-        json: true,
-        headers: {
-            'content-type': 'application/json'
-        }
-    })
+async function jenkinsApi(url, server) {
+    try
+    {
+        const data = await rp({
+            url,
+            //auth : {user:'elenara', token:'', bearer:'585b61e664b7111f5365da70aaa80993'},
+            resolveWithFullResponse: false,
+            method: 'GET',
+            json: true,
+            headers: {
+                'content-type': 'application/json'
+            }
+        })
+        return data.jobs
+
+    } catch (e) {
+        
+        console.log(`Smth went wrong while getting data from ${url.split('@')[1]}`)
+        return []
+    }
 }
 
 async function getStatusFromJenkins() {
-    const data = await jenkinsApi(`https://${process.env.JENKINS_USER}:${process.env.JENKINS_TOKEN}@jenkins.sys.kth.se/api/json`)
-    console.log(data.body.jobs)
-    return data
+
+        const allBuilds = await jenkinsApi(`https://${process.env.JENKINS_USER}:${process.env.JENKINS_TOKEN}@jenkins.sys.kth.se/api/json`)
+        
+        const filteredJobs = allBuilds.filter(j => j.name == 'social-develop' )
+
+        console.log(filteredJobs)
+
+        return filteredJobs
+
 }
 
 async function getStatusFromBuild() {
-    const data = await jenkinsApi(`https://${process.env.JENKINS_USER}:${process.env.BUILD_TOKEN}@build.sys.kth.se/api/json`)
-    console.log("holllllla", data.body.jobs)
+    const jobs = await jenkinsApi(`https://${process.env.JENKINS_USER}:${process.env.BUILD_TOKEN}@build.sys.kth.se/api/json`)
+    console.log("holllllla", data)
     return data
 }
 
 getStatusFromJenkins ()
-getStatusFromBuild()
+//consolgetStatusFromBuild()
