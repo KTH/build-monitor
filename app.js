@@ -4,6 +4,8 @@ const server = require('kth-node-server')
 const prefix = '/app/build-monitor'
 const express = require('express')
 const path = require('path')
+const rp = require('request-promise')
+
 
 ///const log = require('./server/log')
 const PORT = process.env.PORT || 3000
@@ -21,6 +23,22 @@ server.start({
   ///logger: log
 })
 
-async function getStatusFromJenkins() {
-    const data = await jenkinsApi('https://jenkins.sys.kth.se/api/json')
+async function jenkinsApi(url) {
+    return rp({
+        url,
+        //auth : {user:'elenara', token:'', bearer:'585b61e664b7111f5365da70aaa80993'},
+        resolveWithFullResponse: true,
+        method: 'GET',
+        headers: {
+            'content-type': 'application/json'
+        }
+    })
 }
+
+async function getStatusFromJenkins() {
+    const data = await jenkinsApi(`https://${process.env.JENKINS_USER}:${process.env.JENKINS_TOKEN}@jenkins.sys.kth.se/api/json`)
+    console.log(data)
+    return data
+}
+
+getStatusFromJenkins ()

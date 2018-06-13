@@ -24,6 +24,8 @@
     "express": "^4.16.3",
     "kth-node-server": "^3.1.1",
     "kth-style": "^3.0.0-beta.2",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "request": "^2.87.0",
+    "request-promise": "^4.2.2"
   }
 }
