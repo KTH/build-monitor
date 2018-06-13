@@ -55,8 +55,11 @@ async function getStatusFromJenkins(req, res) {
 
         const statusLib = {
             blue: 'alert-success',
+            red: 'alert-danger',
+            yellow: 'alert-info',
             blue_anime: 'alert-primary',
-            red: 'alert-danger' 
+            red_anime: 'alert-primary',
+            yellow_anime: 'alert-primary' 
         }
 
         let stringDiv = ''         
