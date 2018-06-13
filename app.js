@@ -23,7 +23,7 @@ server.start({
   ///logger: log
 })
 
-async function jenkinsApi(url, server) {
+async function jenkinsApi(url) {
     try
     {
         const data = await rp({
@@ -36,16 +36,22 @@ async function jenkinsApi(url, server) {
 
     } catch (e) {
         
-        console.log(`Smth went wrong while getting data from ${url.split('@')[1]}`)
+        console.log(`Smth went wrong while getting data from ${url.split('@')[1]}: `, e)
         return []
     }
 }
 
 async function getStatusFromJenkins() {
 
-        const allBuilds = await jenkinsApi(`https://${process.env.JENKINS_USER}:${process.env.JENKINS_TOKEN}@jenkins.sys.kth.se/api/json`)
+        const jenkinsKTH = await jenkinsApi(`https://${process.env.JENKINS_USER}:${process.env.JENKINS_TOKEN}@jenkins.sys.kth.se/api/json`)
         
-        const filteredJobs = allBuilds.filter(j => j.name == 'social-develop' )
+        const socialBuilds = jenkinsKTH.filter(j => j.name == 'social-develop' || j.name == 'social-master'|| j.name == 'social-features' )
+
+        const buildKTH = await jenkinsApi(`https://${process.env.JENKINS_USER}:${process.env.BUILD_TOKEN}@build.sys.kth.se/api/json`)
+
+        const lmsBuilds = buildKTH.filter(j => j.name == 'lms-export-results' ||  j.name =='lms-sync-users'  || j.name == 'lms-sync-courses' || j.name == 'lms-api')
+
+        const filteredJobs = [...socialBuilds, ...lmsBuilds]
 
         console.log(filteredJobs)
 
@@ -53,11 +59,6 @@ async function getStatusFromJenkins() {
 
 }
 
-async function getStatusFromBuild() {
-    const jobs = await jenkinsApi(`https://${process.env.JENKINS_USER}:${process.env.BUILD_TOKEN}@build.sys.kth.se/api/json`)
-    console.log("holllllla", data)
-    return data
-}
+
 
 getStatusFromJenkins ()
-//consolgetStatusFromBuild()
