@@ -78,10 +78,15 @@ async function getStatusFromJenkins (req, res) {
     .join('')
 
   return res.send(`
-            <link rel="stylesheet" href="/app/build-monitor/bootstrap/css/bootstrap.css">
-            <link rel="stylesheet" href="/app/build-monitor/kth-style/css/kth-bootstrap.css">
-            <h2>LIST BUILDS</h2>
-            ${stringDiv}  
+    <html>
+      <head>
+        <meta charset=utf-8>
+        <title>Build status</title>
+        <meta http-equiv="refresh" content="10">
+        <link rel="stylesheet" href="/app/build-monitor/bootstrap/css/bootstrap.css">
+        <link rel="stylesheet" href="/app/build-monitor/kth-style/css/kth-bootstrap.css">
+        <h2>LIST BUILDS</h2>
+        ${stringDiv}
   `)
 }
 
