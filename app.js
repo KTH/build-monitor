@@ -38,11 +38,22 @@ async function jenkinsApi (url) {
 }
 
 async function getStatusFromJenkins (req, res) {
+  const socialNames = [
+    'social-develop',
+    'social-master',
+    'social-features'
+  ]
   const jenkinsKTH = await jenkinsApi(`https://${process.env.JENKINS_USER}:${process.env.JENKINS_TOKEN}@jenkins.sys.kth.se/api/json`)
-  const socialBuilds = jenkinsKTH.filter(j => j.name == 'social-develop' || j.name == 'social-master' || j.name == 'social-features')
+  const socialBuilds = jenkinsKTH.filter(j => socialNames.includes(j.name))
 
+  const lmsNames = [
+    'lms-export-results',
+    'lms-sync-users',
+    'lms-sync-courses',
+    'lms-api'
+  ]
   const buildKTH = await jenkinsApi(`https://${process.env.JENKINS_USER}:${process.env.BUILD_TOKEN}@build.sys.kth.se/api/json`)
-  const lmsBuilds = buildKTH.filter(j => j.name == 'lms-export-results' || j.name == 'lms-sync-users' || j.name == 'lms-sync-courses' || j.name == 'lms-api')
+  const lmsBuilds = buildKTH.filter(j => lmsNames.includes(j.name))
 
   const filteredJobs = [...socialBuilds, ...lmsBuilds]
 
