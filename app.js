@@ -61,10 +61,11 @@ async function getStatusFromJenkins (req, res) {
     blue: 'alert-success',
     red: 'alert-danger',
     yellow: 'alert-info',
-    blue_anime: 'alert-primary',
-    red_anime: 'alert-primary',
-    yellow_anime: 'alert-primary'
+    blue_anime: 'alert-success progress-bar-striped progress-bar-animated',
+    red_anime: 'alert-danger progress-bar-striped progress-bar-animated',
+    yellow_anime: 'alert-info progress-bar-striped progress-bar-animated'
   }
+//         <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div>
 
   const stringDiv = filteredJobs
     .map(build =>
@@ -82,7 +83,6 @@ async function getStatusFromJenkins (req, res) {
       <head>
         <meta charset=utf-8>
         <title>Build status</title>
-        <meta http-equiv="refresh" content="10">
         <link rel="stylesheet" href="/app/build-monitor/bootstrap/css/bootstrap.css">
         <link rel="stylesheet" href="/app/build-monitor/kth-style/css/kth-bootstrap.css">
         <h2>LIST BUILDS</h2>
