@@ -66,11 +66,16 @@ async function getStatusFromJenkins (req, res) {
     yellow_anime: 'alert-primary'
   }
 
-  let stringDiv = ''
-
-  for (let build of filteredJobs) {
-    stringDiv = `${stringDiv}<div aria-live="polite" role="alert" class="alert ${statusLib[build.color]}"><p><b>${build.name}</b></p></div>`
-  }
+  const stringDiv = filteredJobs
+    .map(build =>
+      `<div
+         aria-live="polite"
+         role="alert"
+         class="alert ${statusLib[build.color]}"
+       >
+         <p><b>${build.name}</b></p>
+       </div>`)
+    .join('')
 
   return res.send(`
             <link rel="stylesheet" href="/app/build-monitor/bootstrap/css/bootstrap.css">
