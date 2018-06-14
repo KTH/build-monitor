@@ -7,7 +7,7 @@ const path = require('path')
 const rp = require('request-promise')
 
 /// const log = require('./server/log')
-const PORT = process.env.PORT || 8080
+const PORT = process.env.SERVER_PORT || process.env.PORT || 3000
 
 /* ****************************
  * ******* SERVER START *******
