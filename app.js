@@ -73,7 +73,7 @@ async function getStatusFromJenkins (req, res) {
          role="alert"
          class="alert ${statusLib[build.color]}"
        >
-         <p><b>${build.name}</b></p>
+         <p><b>${build.name}</b> <a href="${build.url}">check for more</a></p>
        </div>`)
     .join('')
 
