@@ -6,6 +6,7 @@ const express = require('express')
 const path = require('path')
 const rp = require('request-promise')
 
+
 /// const log = require('./server/log')
 const PORT = process.env.SERVER_PORT || process.env.PORT || 3000
 
@@ -91,3 +92,6 @@ async function getStatusFromJenkins (req, res) {
 }
 
 server.get(prefix + '/test', getStatusFromJenkins)
+
+server.get(prefix + '/_monitor', (req, res) =>
+    res.type('text').status(200).send('APPLICATION_STATUS OK'))
