@@ -23,13 +23,19 @@ server.start({
 server.use(prefix + '/bootstrap', express.static(path.join(__dirname, '/node_modules/bootstrap/dist')))
 server.use(prefix + '/kth-style', express.static(path.join(__dirname, '/node_modules/kth-style/dist')))
 
-async function jenkinsApi (url) {
+async function jenkinsApi (url, token) {
   try {
     const data = await rp({
+      //    host: 'test.example.com',
+   //port: 443,
+   //path: '/api/service/'+servicename,
       url,
       resolveWithFullResponse: false,
       method: 'GET',
-      json: true
+      json: true,
+      headers: {
+        'Authorization': 'Basic ' + new Buffer(process.env.JENKINS_USER + ':' + token).toString('base64')
+      }
     })
     return data.jobs
   } catch (e) {
@@ -44,7 +50,7 @@ async function getStatusFromJenkins (req, res) {
     'social-master',
     'social-features'
   ]
-  const jenkinsKTH = await jenkinsApi(`https://${process.env.JENKINS_USER}:${process.env.JENKINS_TOKEN}@jenkins.sys.kth.se/api/json`)
+  const jenkinsKTH = await jenkinsApi(`https://jenkins.sys.kth.se/api/json`, process.env.JENKINS_TOKEN)
   const socialBuilds = jenkinsKTH.filter(j => socialNames.includes(j.name))
 
   const lmsNames = [
@@ -53,7 +59,7 @@ async function getStatusFromJenkins (req, res) {
     'lms-sync-courses',
     'lms-api'
   ]
-  const buildKTH = await jenkinsApi(`https://${process.env.JENKINS_USER}:${process.env.BUILD_TOKEN}@build.sys.kth.se/api/json`)
+  const buildKTH = await jenkinsApi(`https://build.sys.kth.se/api/json`, process.env.BUILD_TOKEN)
   const lmsBuilds = buildKTH.filter(j => lmsNames.includes(j.name))
 
   const filteredJobs = [...socialBuilds, ...lmsBuilds]
