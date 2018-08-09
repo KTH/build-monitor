@@ -9,7 +9,7 @@ const moment = require('moment')
 const storage = require('azure-storage')
 const bunyan = require('bunyan')
 
-const logLevel = process.env.BUNYAN_LOG_LEVEL
+const logLevel = process.env.BUNYAN_LOG_LEVEL || 'info'
 const log = bunyan.createLogger({
   name: 'build-monitor',
   level: logLevel
@@ -203,4 +203,4 @@ server.get(prefix + '/test', getStatusFromJenkins)
 server.get(prefix + '/_monitor', (req, res) =>
   res.type('text').status(200).send('APPLICATION_STATUS OK'))
 
-server.get(prefix + '/canvas_imports', getCanvasImportErrors)
+server.get(prefix + '/canvas_import_errors', getCanvasImportErrors)
