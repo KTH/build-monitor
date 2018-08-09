@@ -5,10 +5,13 @@ const prefix = '/app/build-monitor'
 const express = require('express')
 const path = require('path')
 const rp = require('request-promise')
-
+const bunyan = require('bunyan')
 
 /// const log = require('./server/log')
 const PORT = process.env.SERVER_PORT || process.env.PORT || 3000
+const log = bunyan.createLogger({
+  name: 'build-monitor'
+})
 
 /* ****************************
  * ******* SERVER START *******
@@ -17,29 +20,29 @@ const PORT = process.env.SERVER_PORT || process.env.PORT || 3000
 
 server.start({
   useSsl: false,
-  port: PORT
-  /// logger: log
+  port: PORT,
+  logger: log
 })
 server.use(prefix + '/bootstrap', express.static(path.join(__dirname, '/node_modules/bootstrap/dist')))
 server.use(prefix + '/kth-style', express.static(path.join(__dirname, '/node_modules/kth-style/dist')))
 
-async function jenkinsApi (url, token) {
+async function jenkinsApi (url, username, token) {
   try {
     const data = await rp({
       //    host: 'test.example.com',
-   //port: 443,
-   //path: '/api/service/'+servicename,
+      // port: 443,
+      // path: '/api/service/'+servicename,
       url,
       resolveWithFullResponse: false,
       method: 'GET',
       json: true,
       headers: {
-        'Authorization': 'Basic ' + new Buffer(process.env.JENKINS_USER + ':' + token).toString('base64')
+        'Authorization': 'Basic ' + Buffer.from(username + ':' + token).toString('base64')
       }
     })
     return data.jobs
   } catch (e) {
-    console.log(`Smth went wrong while getting data from ${url.split('@')[1]}: `, e)
+    log.error(`Something went wrong while getting data from ${url.split('@')[1]}: `, e)
     return []
   }
 }
@@ -50,7 +53,7 @@ async function getStatusFromJenkins (req, res) {
     'social-master',
     'social-features'
   ]
-  const jenkinsKTH = await jenkinsApi(`https://jenkins.sys.kth.se/api/json`, process.env.JENKINS_TOKEN)
+  const jenkinsKTH = await jenkinsApi(`https://jenkins.sys.kth.se/api/json`, process.env.JENKINS_USER, process.env.JENKINS_TOKEN)
   const socialBuilds = jenkinsKTH.filter(j => socialNames.includes(j.name))
 
   const lmsNames = [
@@ -59,7 +62,7 @@ async function getStatusFromJenkins (req, res) {
     'lms-sync-courses',
     'lms-api'
   ]
-  const buildKTH = await jenkinsApi(`https://build.sys.kth.se/api/json`, process.env.BUILD_TOKEN)
+  const buildKTH = await jenkinsApi(`https://build.sys.kth.se/api/json`, process.env.BUILD_USER, process.env.BUILD_TOKEN)
   const lmsBuilds = buildKTH.filter(j => lmsNames.includes(j.name))
 
   const filteredJobs = [...socialBuilds, ...lmsBuilds]
@@ -100,4 +103,4 @@ async function getStatusFromJenkins (req, res) {
 server.get(prefix + '/test', getStatusFromJenkins)
 
 server.get(prefix + '/_monitor', (req, res) =>
-    res.type('text').status(200).send('APPLICATION_STATUS OK'))
+  res.type('text').status(200).send('APPLICATION_STATUS OK'))
