@@ -15,9 +15,6 @@ const log =  bunyan.createLogger({
 })
 
 const PORT = process.env.SERVER_PORT || process.env.PORT || 3000
-const log = bunyan.createLogger({
-  name: 'build-monitor'
-})
 
 /* ****************************
  * ******* SERVER START *******
