@@ -57,7 +57,7 @@ async function getStatusFromJenkins (req, res) {
       'social-master',
       'social-features'
     ]
-    const jenkinsKTH = await jenkinsApi(`https://jenkins.sys.kth.se/api/json`, process.env.JENKINS_TOKEN)
+    const jenkinsKTH = await jenkinsApi(`https://jenkins.sys.kth.se/api/json`, process.env.JENKINS_USER, process.env.JENKINS_TOKEN)
     const socialBuilds = jenkinsKTH.filter(j => socialNames.includes(j.name))
     const lmsNames = [
       'lms-export-results',
@@ -65,7 +65,7 @@ async function getStatusFromJenkins (req, res) {
       'lms-sync-courses',
       'lms-api'
     ]
-    const buildKTH = await jenkinsApi(`https://build.sys.kth.se/api/json`, process.env.BUILD_TOKEN)
+    const buildKTH = await jenkinsApi(`https://build.sys.kth.se/api/json`, process.env.BUILD_USER, process.env.BUILD_TOKEN)
     const lmsBuilds = buildKTH.filter(j => lmsNames.includes(j.name))
 
     const filteredJobs = [...socialBuilds, ...lmsBuilds]
