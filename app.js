@@ -190,7 +190,7 @@ async function getCanvasImportErrors (req, res) {
         process.env.UG_URL,
         process.env.UG_USERNAME,
         process.env.UG_PWD)
-      setBlob(JSON.stringify({timeStamp: now, log: latestErrors}))
+      await setBlob(JSON.stringify({timeStamp: now, log: latestErrors}))
       log.info('Renewed logs in the blob.')
     } catch (e) {
       log.error(`Failed to renew logs: ${e}`)
