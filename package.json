@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "NODE_ENV=production node app.js",
-    "start-dev": "NODE_ENV=production nodemon app.js",
+    "start-dev": "NODE_ENV=development nodemon app.js | bunyan -o short",
     "debug": "NODE_ENV=development node --nolazy --inspect-brk=9229 app.js | bunyan -o short"
   },
   "repository": {
@@ -20,17 +20,22 @@
   },
   "homepage": "https://github.com/KTH/build-monitor#readme",
   "dependencies": {
+    "@kth/collect_sis_imports_errors": "^1.2.0",
+    "azure-storage": "^2.10.1",
     "bootstrap": "^4.1.1",
     "bunyan": "^1.8.12",
     "dotenv": "^6.0.0",
     "express": "^4.16.3",
     "kth-node-server": "^3.1.1",
-    "kth-style": "^3.0.0-beta.2",
+    "kth-style": "^3.0.0-beta.8",
+    "moment": "^2.22.2",
     "path": "^0.12.7",
+    "popper.js": "^1.14.3",
     "request": "^2.87.0",
     "request-promise": "^4.2.2"
   },
   "devDependencies": {
+    "nodemon": "^1.18.3",
     "standard": "^11.0.1"
   }
 }
