@@ -1,4 +1,6 @@
-const rp = require('request-promise')
+const getStatusFromJenkins = require('./lib/jenkinsStatus')
+const canvasImportErrors = require('./lib/canvasImportErrors')
+
 const bunyan = require('bunyan')
 const logLevel = process.env.BUNYAN_LOG_LEVEL || 'info'
 const log = bunyan.createLogger({
@@ -6,45 +8,7 @@ const log = bunyan.createLogger({
   level: logLevel
 })
 
-async function jenkinsApi (url, username, token) {
-  try {
-    const data = await rp({
-      url,
-      resolveWithFullResponse: false,
-      method: 'GET',
-      json: true,
-      headers: {
-        'Authorization': 'Basic ' + Buffer.from(username + ':' + token).toString('base64')
-      }
-    })
-    return data.jobs
-  } catch (e) {
-    log.error(`Something went wrong while getting data from ${url.split('@')[1]}: `, e)
-    return []
-  }
-}
-
-async function getStatusFromJenkins () {
-  const socialNames = [
-    'social-develop',
-    'social-master',
-    'social-features'
-  ]
-  const jenkinsKTH = await jenkinsApi(`https://jenkins.sys.kth.se/api/json`, process.env.JENKINS_USER, process.env.JENKINS_TOKEN)
-  const socialBuilds = jenkinsKTH.filter(j => socialNames.includes(j.name))
-  const lmsNames = [
-    'lms-export-results',
-    'lms-sync-users',
-    'lms-sync-courses',
-    'lms-api'
-  ]
-  const buildKTH = await jenkinsApi(`https://build.sys.kth.se/api/json`, process.env.BUILD_USER, process.env.BUILD_TOKEN)
-  const lmsBuilds = buildKTH.filter(j => lmsNames.includes(j.name))
-
-  return [...socialBuilds, ...lmsBuilds]
-}
-
-module.exports = async function (req, res) {
+async function testEndpoint (req, res) {
   try {
     const statusLib = {
       blue: 'alert-success',
@@ -89,4 +53,33 @@ module.exports = async function (req, res) {
       <div>Build status failing. Refreshing in 10 seconds. Check the logs...</div>
     `)
   }
+}
+
+async function canvasImportErrorsEndpoint (req, res) {
+  try {
+    const cachedLog = canvasImportErrors.getLogs()
+  } catch (e) {
+    log.error('Something went horribly wrong when trying to fetch the blob.')
+    log.error(e)
+    res.send(e)
+  }
+
+  canvasImportErrors.renewLogs(cachedLog)
+
+  res.send(`
+    <html>
+      <head>
+        <meta charset=utf-8>
+        <title>SIS IMPORT ERRORS</title>
+        <meta http-equiv="refresh" content="10">
+        <link rel="stylesheet" href="/app/build-monitor/bootstrap/css/bootstrap.css">
+        <link rel="stylesheet" href="/app/build-monitor/kth-style/css/kth-bootstrap.css">
+        <h1>Error logs found</h1>
+        <p>${cachedLog.log.replace(newlineRegExp, '<br>')}</p>
+  `)
+}
+
+module.exports = {
+  testEndpoint,
+  canvasImportErrorsEndpoint
 }

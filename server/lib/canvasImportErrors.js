@@ -32,7 +32,7 @@ async function setBlob (text) {
   })
 }
 
-async function getCanvasImportErrors () {
+async function getLogs () {
   let cachedLog = JSON.parse(templateFileText)
 
   let result = await new Promise((resolve, reject) => {
@@ -94,26 +94,7 @@ async function renewLogs (cachedLog) {
   }
 }
 
-module.exports = async function (req, res) {
-  try {
-    const cachedLog = getCanvasImportErrors()
-  } catch (e) {
-    log.error('Something went horribly wrong when trying to fetch the blob.')
-    log.error(e)
-    res.send(e)
-  }
-
-  renewLogs(cachedLog)
-
-  res.send(`
-    <html>
-      <head>
-        <meta charset=utf-8>
-        <title>SIS IMPORT ERRORS</title>
-        <meta http-equiv="refresh" content="10">
-        <link rel="stylesheet" href="/app/build-monitor/bootstrap/css/bootstrap.css">
-        <link rel="stylesheet" href="/app/build-monitor/kth-style/css/kth-bootstrap.css">
-        <h1>Error logs found</h1>
-        <p>${cachedLog.log.replace(newlineRegExp, '<br>')}</p>
-  `)
+module.exports = {
+  getLogs,
+  renewLogs
 }

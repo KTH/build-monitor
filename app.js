@@ -4,8 +4,7 @@ const server = require('kth-node-server')
 const express = require('express')
 const path = require('path')
 
-const getStatusFromJenkins = require('./server/jenkinsStatus')
-const getCanvasImportErrors = require('./server/canvasImportErrors')
+const legacyRoutes = require('./server/legacy')
 
 const prefix = process.env.PROXY_PREFIX || ''
 const PORT = process.env.SERVER_PORT || process.env.PORT || 3000
@@ -30,7 +29,7 @@ server.start({
 server.use(prefix + '/bootstrap', express.static(path.join(__dirname, '/node_modules/bootstrap/dist')))
 server.use(prefix + '/kth-style', express.static(path.join(__dirname, '/node_modules/kth-style/dist')))
 
-server.get(prefix + '/test', getStatusFromJenkins)
+server.get(prefix + '/test', legacyRoutes.testEndpoint)
 server.get(prefix + '/_monitor', (req, res) => res.type('text').status(200).send('APPLICATION_STATUS OK'))
-server.get(prefix + '/builds', getStatusFromJenkins)
-server.get(prefix + '/canvas_import_errors', getCanvasImportErrors)
+server.get(prefix + '/builds', legacyRoutes.testEndpoint)
+server.get(prefix + '/canvas_import_errors', legacyRoutes.canvasImportErrorsEndpoint)
