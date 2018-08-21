@@ -32,61 +32,48 @@ async function setBlob (text) {
   })
 }
 
-module.exports = async function getCanvasImportErrors (req, res) {
+async function getCanvasImportErrors () {
   let cachedLog = JSON.parse(templateFileText)
-  try {
-    let result = await new Promise((resolve, reject) => {
-      blobService.getBlobToText(containerName, blobName, (err, text) => {
-        if (err) {
-          if (err.name === 'StorageError' && err.code === 'ContainerNotFound') {
-            resolve(blobStatuses.BLOB_CONTAINER_MISSING)
-          } else if (err.name === 'StorageError' && err.code === 'BlobNotFound') {
-            resolve(blobStatuses.BLOB_MISSING)
-          } else {
-            reject(err)
-          }
+
+  let result = await new Promise((resolve, reject) => {
+    blobService.getBlobToText(containerName, blobName, (err, text) => {
+      if (err) {
+        if (err.name === 'StorageError' && err.code === 'ContainerNotFound') {
+          resolve(blobStatuses.BLOB_CONTAINER_MISSING)
+        } else if (err.name === 'StorageError' && err.code === 'BlobNotFound') {
+          resolve(blobStatuses.BLOB_MISSING)
         } else {
-          cachedLog = JSON.parse(text)
-          resolve(blobStatuses.BLOB_DOWNLOADED)
+          reject(err)
+        }
+      } else {
+        cachedLog = JSON.parse(text)
+        resolve(blobStatuses.BLOB_DOWNLOADED)
+      }
+    })
+  })
+  if (result === blobStatuses.BLOB_CONTAINER_MISSING) {
+    result = await new Promise((resolve, reject) => {
+      blobService.createContainer(containerName, {publicAccessLevel: 'blob'}, err => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(blobStatuses.BLOB_CONTAINER_CREATED)
         }
       })
     })
-    if (result === blobStatuses.BLOB_CONTAINER_MISSING) {
-      result = await new Promise((resolve, reject) => {
-        blobService.createContainer(containerName, {publicAccessLevel: 'blob'}, err => {
-          if (err) {
-            reject(err)
-          } else {
-            resolve(blobStatuses.BLOB_CONTAINER_CREATED)
-          }
-        })
-      })
+  }
+  if (result === blobStatuses.BLOB_CONTAINER_CREATED ||
+      result === blobStatuses.BLOB_MISSING) {
+    result = await setBlob(templateFileText)
+    if (result === blobStatuses.BLOB_CREATED) {
+      log.info('A new blob was created.')
     }
-    if (result === blobStatuses.BLOB_CONTAINER_CREATED ||
-        result === blobStatuses.BLOB_MISSING) {
-      result = await setBlob(templateFileText)
-      if (result === blobStatuses.BLOB_CREATED) {
-        log.info('A new blob was created.')
-      }
-    }
-  } catch (e) {
-    log.error('Something went horribly wrong when trying to fetch the blob.')
-    log.error(e)
-    return res.send(e)
   }
 
-  res.send(`
-    <html>
-      <head>
-        <meta charset=utf-8>
-        <title>SIS IMPORT ERRORS</title>
-        <meta http-equiv="refresh" content="10">
-        <link rel="stylesheet" href="/app/build-monitor/bootstrap/css/bootstrap.css">
-        <link rel="stylesheet" href="/app/build-monitor/kth-style/css/kth-bootstrap.css">
-        <h1>Error logs found</h1>
-        <p>${cachedLog.log.replace(newlineRegExp, '<br>')}</p>
-  `)
+  return cachedLog
+}
 
+async function renewLogs (cachedLog) {
   const now = moment().format('x')
   if ((now - cachedLog.timeStamp) > process.env.LOG_TTL) {
     const from = moment().subtract(7, 'days').utc().toDate().toISOString()
@@ -105,4 +92,28 @@ module.exports = async function getCanvasImportErrors (req, res) {
       log.error(`Failed to renew logs: ${e}`)
     }
   }
+}
+
+module.exports = async function (req, res) {
+  try {
+    const cachedLog = getCanvasImportErrors()
+  } catch (e) {
+    log.error('Something went horribly wrong when trying to fetch the blob.')
+    log.error(e)
+    res.send(e)
+  }
+
+  renewLogs(cachedLog)
+
+  res.send(`
+    <html>
+      <head>
+        <meta charset=utf-8>
+        <title>SIS IMPORT ERRORS</title>
+        <meta http-equiv="refresh" content="10">
+        <link rel="stylesheet" href="/app/build-monitor/bootstrap/css/bootstrap.css">
+        <link rel="stylesheet" href="/app/build-monitor/kth-style/css/kth-bootstrap.css">
+        <h1>Error logs found</h1>
+        <p>${cachedLog.log.replace(newlineRegExp, '<br>')}</p>
+  `)
 }
