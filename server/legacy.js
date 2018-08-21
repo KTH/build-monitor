@@ -1,3 +1,5 @@
+const express = require('express')
+
 const getStatusFromJenkins = require('./lib/jenkinsStatus')
 const canvasImportErrors = require('./lib/canvasImportErrors')
 
@@ -7,6 +9,13 @@ const log = bunyan.createLogger({
   name: 'build-monitor',
   level: logLevel
 })
+
+const legacyRouter = express.Router()
+legacyRouter.get('/test', testEndpoint)
+legacyRouter.get('/builds', testEndpoint)
+legacyRouter.get('/canvas_import_errors', canvasImportErrorsEndpoint)
+
+module.exports = legacyRouter
 
 async function testEndpoint (req, res) {
   try {
@@ -77,9 +86,4 @@ async function canvasImportErrorsEndpoint (req, res) {
         <h1>Error logs found</h1>
         <p>${cachedLog.log.replace(newlineRegExp, '<br>')}</p>
   `)
-}
-
-module.exports = {
-  testEndpoint,
-  canvasImportErrorsEndpoint
 }
