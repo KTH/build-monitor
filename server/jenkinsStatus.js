@@ -24,26 +24,28 @@ async function jenkinsApi (url, username, token) {
   }
 }
 
-module.exports = async function getStatusFromJenkins (req, res) {
+async function getStatusFromJenkins () {
+  const socialNames = [
+    'social-develop',
+    'social-master',
+    'social-features'
+  ]
+  const jenkinsKTH = await jenkinsApi(`https://jenkins.sys.kth.se/api/json`, process.env.JENKINS_USER, process.env.JENKINS_TOKEN)
+  const socialBuilds = jenkinsKTH.filter(j => socialNames.includes(j.name))
+  const lmsNames = [
+    'lms-export-results',
+    'lms-sync-users',
+    'lms-sync-courses',
+    'lms-api'
+  ]
+  const buildKTH = await jenkinsApi(`https://build.sys.kth.se/api/json`, process.env.BUILD_USER, process.env.BUILD_TOKEN)
+  const lmsBuilds = buildKTH.filter(j => lmsNames.includes(j.name))
+
+  return [...socialBuilds, ...lmsBuilds]
+}
+
+module.exports = async function (req, res) {
   try {
-    const socialNames = [
-      'social-develop',
-      'social-master',
-      'social-features'
-    ]
-    const jenkinsKTH = await jenkinsApi(`https://jenkins.sys.kth.se/api/json`, process.env.JENKINS_USER, process.env.JENKINS_TOKEN)
-    const socialBuilds = jenkinsKTH.filter(j => socialNames.includes(j.name))
-    const lmsNames = [
-      'lms-export-results',
-      'lms-sync-users',
-      'lms-sync-courses',
-      'lms-api'
-    ]
-    const buildKTH = await jenkinsApi(`https://build.sys.kth.se/api/json`, process.env.BUILD_USER, process.env.BUILD_TOKEN)
-    const lmsBuilds = buildKTH.filter(j => lmsNames.includes(j.name))
-
-    const filteredJobs = [...socialBuilds, ...lmsBuilds]
-
     const statusLib = {
       blue: 'alert-success',
       red: 'alert-danger',
@@ -53,6 +55,7 @@ module.exports = async function getStatusFromJenkins (req, res) {
       yellow_anime: 'alert-info progress-bar-striped progress-bar-animated'
     }
 
+    const filteredJobs = await getStatusFromJenkins()
     const stringDiv = filteredJobs
       .map(build =>
         `<div
