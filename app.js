@@ -28,6 +28,12 @@ server.start({
 })
 server.use(prefix + '/bootstrap', express.static(path.join(__dirname, '/node_modules/bootstrap/dist')))
 server.use(prefix + '/kth-style', express.static(path.join(__dirname, '/node_modules/kth-style/dist')))
+server.use(prefix, legacyRouter)
+server.use(prefix, express.static('public'))
 
 server.get(prefix + '/_monitor', (req, res) => res.type('text').status(200).send('APPLICATION_STATUS OK'))
-server.use(prefix, legacyRouter)
+
+server.get(prefix, (req, res) => {
+  res.send('This is the new endpoint!')
+})
+// server.use(prefix + '/api', apiRouter)

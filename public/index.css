@@ -1,0 +1,37 @@
+:root {
+  --serif-font: Georgia Regular,Georgia,garamond pro,garamond,times new roman,times,serif;
+  --sans-serif-font: -apple-system, BlinkMacSystemFont, "Neue Haas Grotesk Text Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --kth-blue: #1F4E9B;
+  --dark-gray: #5A5A61;
+  --white: #fff;
+}
+
+body, input, select, textarea, button {
+  font-family: var(--sans-serif-font);
+}
+
+body {
+  background: var(--dark-gray);
+  color: var(--white);
+  padding: 0;
+  margin: 0;
+  font-size: 16px;
+}
+
+.header {
+  margin: 0;
+  padding: 8px 48px;
+  background: var(--kth-blue);
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 1.2rem;
+  font-weight: 300;
+  letter-spacing: 0.05rem;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+}
+
+.main {
+  padding: 48px 48px 0;
+}

@@ -16,6 +16,8 @@ RUN cp -a /npm/node_modules /application && \
 # Copy files
 COPY ["package.json", "package.json"]
 COPY ["app.js", "app.js"]
+COPY ["server", "server"]
+COPY ["public", "public"]
 
 EXPOSE 3000
 
