@@ -5,6 +5,7 @@ const express = require('express')
 const path = require('path')
 
 const legacyRouter = require('./server/legacy')
+const apiRouter = require('./server/api')
 
 const prefix = process.env.PROXY_BASE || ''
 const PORT = process.env.SERVER_PORT || process.env.PORT || 3000
@@ -30,7 +31,6 @@ server.use(prefix + '/bootstrap', express.static(path.join(__dirname, '/node_mod
 server.use(prefix + '/kth-style', express.static(path.join(__dirname, '/node_modules/kth-style/dist')))
 server.use(prefix, legacyRouter)
 server.use(prefix, express.static('public'))
+server.use(prefix + '/api', apiRouter)
 
 server.get(prefix + '/_monitor', (req, res) => res.type('text').status(200).send('APPLICATION_STATUS OK'))
-
-// server.use(prefix + '/api', apiRouter)
