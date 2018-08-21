@@ -33,7 +33,4 @@ server.use(prefix, express.static('public'))
 
 server.get(prefix + '/_monitor', (req, res) => res.type('text').status(200).send('APPLICATION_STATUS OK'))
 
-server.get(prefix, (req, res) => {
-  res.send('This is the new endpoint!')
-})
 // server.use(prefix + '/api', apiRouter)
