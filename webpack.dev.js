@@ -10,5 +10,10 @@ module.exports = merge(common, {
   devtool: 'inline-source-map',
   plugins: [
     new webpack.HotModuleReplacementPlugin()
-  ]
+  ],
+  resolve: {
+    alias: {
+      inferno: 'inferno/dist/index.dev.esm.js'
+    }
+  }
 })

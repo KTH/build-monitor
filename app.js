@@ -17,6 +17,29 @@ const log = bunyan.createLogger({
   level: logLevel
 })
 
+/* Hot code reloading */
+// Important: this should be BEFORE other express.static() calls
+if (process.env.NODE_ENV === 'development') {
+  const webpack = require('webpack')
+  const config = require('./webpack.dev.js')
+  const compiler = webpack(config)
+  console.log('WE ARE IN DEV MODE')
+
+  server.use(require('webpack-dev-middleware')(compiler, {
+    publicPath: config.output.publicPath
+  }))
+  server.use(require('webpack-hot-middleware')(compiler))
+}
+
+
+server.use(prefix + '/bootstrap', express.static(path.join(__dirname, '/node_modules/bootstrap/dist')))
+server.use(prefix + '/kth-style', express.static(path.join(__dirname, '/node_modules/kth-style/build')))
+server.use(prefix, legacyRouter)
+server.use(prefix, express.static('public'))
+server.use(prefix + '/api', apiRouter)
+
+server.get(prefix + '/_monitor', (req, res) => res.type('text').status(200).send('APPLICATION_STATUS OK'))
+
 /* ****************************
  * ******* SERVER START *******
  * ****************************
@@ -27,10 +50,3 @@ server.start({
   port: PORT,
   logger: log
 })
-server.use(prefix + '/bootstrap', express.static(path.join(__dirname, '/node_modules/bootstrap/dist')))
-server.use(prefix + '/kth-style', express.static(path.join(__dirname, '/node_modules/kth-style/build')))
-server.use(prefix, legacyRouter)
-server.use(prefix, express.static('public'))
-server.use(prefix + '/api', apiRouter)
-
-server.get(prefix + '/_monitor', (req, res) => res.type('text').status(200).send('APPLICATION_STATUS OK'))

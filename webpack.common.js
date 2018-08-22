@@ -7,7 +7,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'public'),
     filename: '[name].bundle.js',
-    publicPath: process.env.PROXY_BASE_PATH || ''
+    publicPath: process.env.PROXY_BASE || ''
   },
   module: {
     rules: [
