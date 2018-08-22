@@ -19,6 +19,12 @@ COPY ["app.js", "app.js"]
 COPY ["server", "server"]
 COPY ["public", "public"]
 
+# Create the front-end code
+COPY ["client", "client"]
+COPY ["webpack.common.js", "webpack.common.js"]
+COPY ["webpack.prod.js", "webpack.prod.js"]
+RUN npm run build
+
 EXPOSE 3000
 
 ENTRYPOINT ["node", "app.js"]
