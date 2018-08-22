@@ -3,12 +3,19 @@
  */
 import Inferno from 'inferno'
 import Builds from './components/Builds'
+import ImportErrors from './components/ImportErrors'
 
 const App = () => (
-  <section>
-    <h1>Builds monitor</h1>
-    <Builds />
-  </section>
+  <div>
+    <section className='monitor-section'>
+      <h1>Builds monitor</h1>
+      <Builds />
+    </section>
+    <section className='monitor-section'>
+      <h1>Canvas Import Errors</h1>
+      <ImportErrors />
+    </section>
+  </div>
 )
 
 export default App

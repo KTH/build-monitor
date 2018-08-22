@@ -36,6 +36,7 @@
     "kth-node-server": "^3.1.1",
     "kth-style": "^3.0.0-beta.8",
     "moment": "^2.22.2",
+    "papaparse": "^4.6.0",
     "path": "^0.12.7",
     "popper.js": "^1.14.3",
     "request": "^2.87.0",

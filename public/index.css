@@ -7,6 +7,10 @@ body {
   margin-right: 0;
 }
 
+.monitor-section {
+  margin: 2rem 0 4rem;
+}
+
 .builds__header {
   display: flex;
 }
