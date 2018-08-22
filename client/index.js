@@ -4,9 +4,6 @@
  * Renders the entire Inferno tree into "#root" HTML Element
  */
 import Inferno, {render} from 'inferno'
-
-const App = () => (
-  <div>Hello Inferno!!!!</div>
-)
+import App from './App'
 
 render(<App />, document.querySelector('#root'))
