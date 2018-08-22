@@ -6,3 +6,29 @@ body {
   padding-right: 0;
   margin-right: 0;
 }
+
+.build {
+  margin: 20px 0;
+  display: flex;
+  align-items: center;
+}
+
+.build__status {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 100%;
+  background: #ccc;
+  vertical-align: middle;
+  flex: 0 0 auto;
+}
+
+.build__name {
+  padding-left: 8px;
+  font-weight: 700;
+  vertical-align: middle;
+  flex: 1 1 auto;
+}
+
+.build__link {
+  flex: 0 0 auto;
+}

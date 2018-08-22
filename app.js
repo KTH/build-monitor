@@ -23,7 +23,6 @@ if (process.env.NODE_ENV === 'development') {
   const webpack = require('webpack')
   const config = require('./webpack.dev.js')
   const compiler = webpack(config)
-  console.log('WE ARE IN DEV MODE')
 
   server.use(require('webpack-dev-middleware')(compiler, {
     publicPath: config.output.publicPath
