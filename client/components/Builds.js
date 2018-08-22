@@ -1,6 +1,6 @@
 import { Component } from 'inferno'
 import { format } from 'date-fns'
-import Card from './BuildCard'
+import BuildCard from './BuildCard'
 
 export default class Builds extends Component {
   constructor (props) {
@@ -18,6 +18,8 @@ export default class Builds extends Component {
         'social'
       ].map(r => ({name: r}))
     }
+
+    this.fetchData = this.fetchData.bind(this)
   }
 
   fetchData () {
@@ -28,7 +30,7 @@ export default class Builds extends Component {
         lastUpdate: new Date(),
         loading: false,
         success: true,
-        builds: []
+        builds
       }))
       .catch(() => this.setState({
         success: false,
@@ -40,7 +42,7 @@ export default class Builds extends Component {
   }
 
   componentDidMount () {
-    // this.fetchData()
+    this.fetchData()
   }
 
   render () {
@@ -48,25 +50,25 @@ export default class Builds extends Component {
 
     return (
       <div>
-        <div>
-          <p>
+        <p className='builds__header'>
+          <span className="builds__header__error">
             {
               !this.state.success && (
                 'Error trying to update. See the backend logs for more information'
               )
             }
-          </p>
-          <p>{lastUpdate && format(lastUpdate, 'HH:mm:ss')}</p>
-        </div>
+          </span>
+          <span class="builds__header__time">{lastUpdate && ('Last Update: ' + format(lastUpdate, 'HH:mm:ss'))}</span>
+        </p>
         <div>
           {
-            this.state.builds.map(({name, status, versions}) => (
-              <Card
+            this.state.builds.map(({name, color, url}) => (
+              <BuildCard
                 loading={this.state.loading}
                 key={name}
                 name={name}
-                status={status}
-                versions={versions}
+                color={color}
+                url={url}
               />
             ))
           }

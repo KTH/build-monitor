@@ -1,10 +1,11 @@
 import Inferno from 'inferno'
 
-const BuildCard = (props) => (
+const BuildCard = ({name, color, url}) => (
   <div className='build'>
-    <div className='build__status'></div>
-    <div className='build__name'>lms-sync-users</div>
-    <div className='build__link'>#344</div>
+    <div className={`build__status build__status--${color}`}></div>
+    <div className='build__name'>
+      <a href={url} target='_blank'>{name}</a>
+    </div>
   </div>
 )
 

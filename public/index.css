@@ -7,19 +7,54 @@ body {
   margin-right: 0;
 }
 
+.builds__header {
+  display: flex;
+}
+.builds__header__error {
+  flex: 1 1 auto;
+}
+
+.builds__header__time {
+  flex: 0 1 auto;
+}
+
 .build {
-  margin: 20px 0;
+  padding: 12px 0;
   display: flex;
   align-items: center;
+  border-top: 1px #eee solid;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 
 .build__status {
   width: 1rem;
   height: 1rem;
   border-radius: 100%;
-  background: #ccc;
+  background: var(--dark);
   vertical-align: middle;
   flex: 0 0 auto;
+}
+
+.build__status--red {
+  background: var(--danger);
+}
+
+.build__status--blue {
+  background: var(--success);
+}
+
+.build__status--blue_anime {
+  background: var(--success);
+  animation: pulse 1s ease-out infinite;
+
 }
 
 .build__name {
