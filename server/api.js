@@ -13,15 +13,27 @@ const logToObject = (log) => {
 }
 
 apiRouter.get('/', async (req, res) => {
-  const status = await getStatusFromJenkins()
-  res.send(status)
+  try {
+    const status = await getStatusFromJenkins()
+    res.send(status)
+  } catch (e) {
+    res.status(500).send({ status: 500 })
+  }
 })
 
 apiRouter.get('/import-errors', async (req, res) => {
-  const cachedLog = await getLogs()
-  renewLogs(cachedLog)
+  try {
+    const cachedLog = await getLogs()
+    renewLogs(cachedLog)
 
-  res.send(logToObject(cachedLog.log))
+    res.send({
+      lastUpdate: parseInt(cachedLog.timeStamp, 10),
+      nextUpdate: parseInt(cachedLog.timeStamp, 10) + parseInt(process.env.LOG_TTL, 10),
+      log: logToObject(cachedLog.log)
+    })
+  } catch (e) {
+    res.status(500).send({ status: 500 })
+  }
 })
 
 module.exports = apiRouter

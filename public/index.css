@@ -20,6 +20,7 @@ body {
 
 .builds__header__time {
   flex: 0 1 auto;
+  text-align: right;
 }
 
 .build {

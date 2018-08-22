@@ -19,11 +19,12 @@ export default class ImportErrors extends Component {
     window.fetch('/api/import-errors')
       .then(r => r.status === 200 ? r : new Error())
       .then(r => r.json())
-      .then(importErrors => this.setState({
-        lastUpdate: new Date(),
+      .then(r => this.setState({
+        lastUpdate: new Date(r.lastUpdate),
+        nextUpdate: new Date(r.nextUpdate),
         loading: false,
         success: true,
-        importErrors
+        importErrors: r.log
       }))
       .catch(() => this.setState({
         success: false,
@@ -40,6 +41,7 @@ export default class ImportErrors extends Component {
 
   render () {
     const lastUpdate = this.state.lastUpdate
+    const nextUpdate = this.state.nextUpdate
 
     return (
       <div>
@@ -51,7 +53,10 @@ export default class ImportErrors extends Component {
               )
             }
           </span>
-          <span class="builds__header__time">{lastUpdate && ('Last Update: ' + format(lastUpdate, 'HH:mm:ss'))}</span>
+          <span class="builds__header__time">
+            <div>{lastUpdate && ('Last Update: ' + format(lastUpdate, 'YYYY-MM-DD HH:mm:ss'))}</div>
+            <div>{nextUpdate && ('Next Update: ' + format(nextUpdate, 'YYYY-MM-DD HH:mm:ss'))}</div>
+          </span>
         </p>
         <table className='table'>
           <thead>
