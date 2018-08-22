@@ -54,8 +54,22 @@ export default class ImportErrors extends Component {
             }
           </span>
           <span class="builds__header__time">
-            <div>{lastUpdate && ('Last Update: ' + format(lastUpdate, 'YYYY-MM-DD HH:mm:ss'))}</div>
-            <div>{nextUpdate && ('Next Update: ' + format(nextUpdate, 'YYYY-MM-DD HH:mm:ss'))}</div>
+            {
+              lastUpdate && (
+                <div>
+                  <span>Last update: </span>
+                  <time className='number'>{format(lastUpdate, 'YYYY-MM-DD HH:mm:ss')}</time>
+                </div>
+              )
+            }
+            {
+              nextUpdate && (
+                <div>
+                  <span>Next Update: </span>
+                  <time className='number'>{format(nextUpdate, 'YYYY-MM-DD HH:mm:ss')}</time>
+                </div>
+              )
+            }
           </span>
         </p>
         <table className='table'>

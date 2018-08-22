@@ -72,3 +72,7 @@ body {
 .build__link {
   flex: 0 0 auto;
 }
+
+.number {
+  font-variant-numeric: tabular-nums;
+}
