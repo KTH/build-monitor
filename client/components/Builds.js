@@ -23,7 +23,7 @@ export default class Builds extends Component {
   }
 
   fetchData () {
-    window.fetch('/api')
+    window.fetch('api')
       .then(r => r.status === 200 ? r : new Error())
       .then(r => r.json())
       .then(builds => this.setState({

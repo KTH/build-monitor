@@ -32,7 +32,8 @@ if (process.env.NODE_ENV === 'development') {
 
 
 server.use(prefix + '/bootstrap', express.static(path.join(__dirname, '/node_modules/bootstrap/dist')))
-server.use(prefix + '/kth-style', express.static(path.join(__dirname, '/node_modules/kth-style/build')))
+server.use(prefix + '/kth-style', express.static(path.join(__dirname, '/node_modules/kth-style/dist')))
+server.use(prefix + '/kth-style2', express.static(path.join(__dirname, '/node_modules/kth-style/build')))
 server.use(prefix, legacyRouter)
 server.use(prefix, express.static('public'))
 server.use(prefix + '/api', apiRouter)

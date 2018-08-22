@@ -16,7 +16,7 @@ export default class ImportErrors extends Component {
   }
 
   fetchData () {
-    window.fetch('/api/import-errors')
+    window.fetch('api/import-errors')
       .then(r => r.status === 200 ? r : new Error())
       .then(r => r.json())
       .then(r => this.setState({
