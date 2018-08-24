@@ -1,7 +1,7 @@
 const sisUtils = require('@kth/collect_sis_imports_errors/sis_utils')
 const moment = require('moment')
 const storage = require('azure-storage')
-const blobService = storage.createBlobService()
+const blobService = storage.createBlobService(process.env.AZURE_STORAGE_CONNECTION_STRING)
 const containerName = 'elearningbmcontainer'
 const templateFileText = JSON.stringify({timeStamp: 0, log: 'no logs have yet been fetched'})
 const blobName = 'bmblob'
