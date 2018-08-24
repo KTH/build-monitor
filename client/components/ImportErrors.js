@@ -47,7 +47,7 @@ export default class ImportErrors extends Component {
     return (
       <div>
         <p className='builds__header'>
-          <span className="builds__header__error">
+          <span className='builds__header__error'>
             {
               this.state.updating && (
                 'Updating logs just now...'
@@ -59,7 +59,7 @@ export default class ImportErrors extends Component {
               )
             }
           </span>
-          <span class="builds__header__time">
+          <span class='builds__header__time'>
             {
               lastUpdate && (
                 <div>

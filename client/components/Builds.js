@@ -51,14 +51,14 @@ export default class Builds extends Component {
     return (
       <div>
         <p className='builds__header'>
-          <span className="builds__header__error">
+          <span className='builds__header__error'>
             {
               !this.state.success && (
                 'Error trying to update. See the backend logs for more information'
               )
             }
           </span>
-          <span class="builds__header__time">{lastUpdate && ('Last Update: ' + format(lastUpdate, 'HH:mm:ss'))}</span>
+          <span class='builds__header__time'>{lastUpdate && ('Last Update: ' + format(lastUpdate, 'HH:mm:ss'))}</span>
         </p>
         <div>
           {
