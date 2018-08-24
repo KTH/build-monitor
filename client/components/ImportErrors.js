@@ -24,6 +24,7 @@ export default class ImportErrors extends Component {
         nextUpdate: new Date(r.nextUpdate),
         loading: false,
         success: true,
+        updating: r.status === 'UPDATING_LOGS',
         importErrors: r.log
       }))
       .catch(() => this.setState({
@@ -47,6 +48,11 @@ export default class ImportErrors extends Component {
       <div>
         <p className='builds__header'>
           <span className="builds__header__error">
+            {
+              this.state.updating && (
+                'Updating logs just now...'
+              )
+            }
             {
               !this.state.success && (
                 'Error trying to update. See the backend logs for more information'

@@ -24,12 +24,13 @@ apiRouter.get('/', async (req, res) => {
 apiRouter.get('/import-errors', async (req, res) => {
   try {
     const cachedLog = await getLogs()
-    renewLogs(cachedLog)
+    const status = await renewLogs(cachedLog)
 
     res.send({
       lastUpdate: parseInt(cachedLog.timeStamp, 10),
       nextUpdate: parseInt(cachedLog.timeStamp, 10) + parseInt(process.env.LOG_TTL, 10),
-      log: logToObject(cachedLog.log)
+      log: logToObject(cachedLog.log),
+      status
     })
   } catch (e) {
     res.status(500).send({ status: 500 })

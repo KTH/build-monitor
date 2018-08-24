@@ -73,24 +73,49 @@ async function getLogs () {
   return cachedLog
 }
 
+// "Lock" to avoid renewals when they are already happening
+let renewing = false
+
 async function renewLogs (cachedLog) {
   const now = moment().format('x')
-  if ((now - cachedLog.timeStamp) > process.env.LOG_TTL) {
-    const from = moment().subtract(7, 'days').utc().toDate().toISOString()
-    try {
-      const latestErrors = await sisUtils.getFilteredErrors(
-        process.env.CANVAS_API_BASE_URL,
-        process.env.CANVAS_ACCESS_TOKEN,
-        from,
-        process.env.UG_URL,
-        process.env.UG_USERNAME,
-        process.env.UG_PWD
-      )
-      await setBlob(JSON.stringify({timeStamp: now, log: latestErrors}))
-      log.info('Renewed logs in the blob.')
-    } catch (e) {
-      log.error(`Failed to renew logs: ${e}`)
-    }
+  const from = moment().subtract(7, 'days').utc().toDate().toISOString()
+  if (renewing) {
+    log.info('Renewal already started')
+    return 'UPDATING_LOGS'
+  }
+
+  if ((now - cachedLog.timeStamp) < process.env.LOG_TTL) {
+    const nextUpdate = moment(parseInt(cachedLog.timeStamp, 10)).add(process.env.LOG_TTL)
+    log.info(`The logs are not expired. It will expire in ${nextUpdate.toNow(true)}`)
+    return 'TTL_NOT_EXCEEDED'
+  }
+
+  // Call the function WITHOUT "await"
+  // so it executes in the background and we can return a "success"
+  renewLogsAsync(cachedLog)
+  return 'SUCCESS'
+}
+
+async function renewLogsAsync (cachedLogs) {
+  // Double check "renewing" to avoid race conditions
+  if (renewing) return
+
+  renewing = true
+  try {
+    const latestErrors = await sisUtils.getFilteredErrors(
+      process.env.CANVAS_API_BASE_URL,
+      process.env.CANVAS_ACCESS_TOKEN,
+      from,
+      process.env.UG_URL,
+      process.env.UG_USERNAME,
+      process.env.UG_PWD
+    )
+    await setBlob(JSON.stringify({timeStamp: now, log: latestErrors}))
+    log.info('Renewed logs in the blob.')
+    renewing = false
+  } catch (e) {
+    renewing = false
+    log.error(`Failed to renew logs: ${e}`)
   }
 }
 
