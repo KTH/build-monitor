@@ -92,11 +92,11 @@ async function renewLogs (cachedLog) {
 
   // Call the function WITHOUT "await"
   // so it executes in the background and we can return a "success"
-  renewLogsAsync(from)
+  renewLogsAsync(from, now)
   return 'SUCCESS'
 }
 
-async function renewLogsAsync (from) {
+async function renewLogsAsync (from, now) {
   // Double check "renewing" to avoid race conditions
   if (renewing) return
 
