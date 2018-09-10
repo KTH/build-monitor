@@ -52,6 +52,11 @@ body {
   background: var(--danger);
 }
 
+.build__status--red_anime {
+  background: var(--danger);
+  animation: pulse 1s ease-out infinite;
+}
+
 .build__status--blue {
   background: var(--success);
 }
@@ -59,7 +64,6 @@ body {
 .build__status--blue_anime {
   background: var(--success);
   animation: pulse 1s ease-out infinite;
-
 }
 
 .build__name {
