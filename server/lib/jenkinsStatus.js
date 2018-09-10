@@ -36,7 +36,9 @@ async function getStatusFromJenkins () {
     'lms-export-results',
     'lms-sync-users',
     'lms-sync-courses',
-    'lms-api'
+    'lms-api',
+    'build-monitor',
+    'lms-web'
   ]
   const buildKTH = await jenkinsApi(`https://build.sys.kth.se/api/json`, process.env.BUILD_USER, process.env.BUILD_TOKEN)
   const lmsBuilds = buildKTH.filter(j => lmsNames.includes(j.name))
