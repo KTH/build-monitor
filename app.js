@@ -23,11 +23,15 @@ if (process.env.NODE_ENV === 'development') {
   const webpack = require('webpack')
   const config = require('./webpack.dev.js')
   const compiler = webpack(config)
+  log.warn('************ The app is going to start in DEVELOPMENT mode ******')
 
   server.use(require('webpack-dev-middleware')(compiler, {
-    publicPath: config.output.publicPath
+    publicPath: config.output.publicPath,
+    logger: log
   }))
-  server.use(require('webpack-hot-middleware')(compiler))
+  server.use(require('webpack-hot-middleware')(compiler, {
+    quiet: true
+  }))
 }
 
 server.use(prefix + '/bootstrap', express.static(path.join(__dirname, '/node_modules/bootstrap/dist')))
