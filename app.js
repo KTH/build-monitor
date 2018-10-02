@@ -7,7 +7,7 @@ const path = require('path')
 const legacyRouter = require('./server/legacy')
 const apiRouter = require('./server/api')
 
-const prefix = process.env.PROXY_BASE || '/app/build-monitor'
+const prefix = process.env.PROXY_BASE || ''
 const PORT = process.env.SERVER_PORT || process.env.PORT || 3000
 
 const bunyan = require('bunyan')
