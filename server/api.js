@@ -23,8 +23,8 @@ apiRouter.get('/', async (req, res) => {
 
 apiRouter.get('/import-errors', async (req, res) => {
   try {
-    const cachedLog = await getLogs()
-    const status = await renewLogs(cachedLog)
+    const cachedLog = await getCanvasLogs({log: req.log})
+    const status = await renewCanvasLogs(cachedLog, {log: req.log})
 
     res.send({
       lastUpdate: parseInt(cachedLog.timeStamp, 10),

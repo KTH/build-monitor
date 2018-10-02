@@ -14,10 +14,9 @@ const blobStatuses = Object.freeze({
 })
 const newlineRegExp = /\n/g
 const bunyan = require('bunyan')
-const logLevel = process.env.BUNYAN_LOG_LEVEL || 'info'
-const log = bunyan.createLogger({
+const defaultLog = bunyan.createLogger({
   name: 'build-monitor',
-  level: logLevel
+  level: process.env.BUNYAN_LOG_LEVEL || 'info'
 })
 
 async function setBlob (text) {
@@ -32,7 +31,9 @@ async function setBlob (text) {
   })
 }
 
-async function getLogs () {
+async function getCanvasLogs (options) {
+  const log = options.log || defaultLog
+
   let cachedLog = JSON.parse(templateFileText)
 
   let result = await new Promise((resolve, reject) => {
@@ -76,7 +77,9 @@ async function getLogs () {
 // "Lock" to avoid renewals when they are already happening
 let renewing = false
 
-async function renewLogs (cachedLog) {
+async function renewCanvasLogs (cachedLog, options) {
+  const log = options.log || defaultLog
+
   const now = moment().format('x')
   const from = moment().subtract(7, 'days').utc().toDate().toISOString()
   if (renewing) {
@@ -120,6 +123,6 @@ async function renewLogsAsync (from, now) {
 }
 
 module.exports = {
-  getLogs,
-  renewLogs
+  getCanvasLogs,
+  renewCanvasLogs
 }

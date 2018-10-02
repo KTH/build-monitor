@@ -11,10 +11,9 @@ const prefix = process.env.PROXY_BASE || ''
 const PORT = process.env.SERVER_PORT || process.env.PORT || 3000
 
 const bunyan = require('bunyan')
-const logLevel = process.env.BUNYAN_LOG_LEVEL || 'info'
 const log = bunyan.createLogger({
   name: 'build-monitor',
-  level: logLevel
+  level: process.env.BUNYAN_LOG_LEVEL || 'info'
 })
 
 /* Hot code reloading */
@@ -34,6 +33,15 @@ if (process.env.NODE_ENV === 'development') {
   }))
 }
 
+/* Middlewares */
+server.use((req, res, next) => {
+  req.log = log.child({
+    request_path: req.path
+  })
+  next()
+})
+
+/* Endpoints */
 server.use(prefix + '/bootstrap', express.static(path.join(__dirname, '/node_modules/bootstrap/dist')))
 server.use(prefix + '/kth-style', express.static(path.join(__dirname, '/node_modules/kth-style/dist')))
 server.use(prefix + '/kth-style2', express.static(path.join(__dirname, '/node_modules/kth-style/build')))
