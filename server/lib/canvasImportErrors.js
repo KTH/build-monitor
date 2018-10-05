@@ -23,6 +23,7 @@ async function setBlob (text) {
   return new Promise((resolve, reject) => {
     blobService.createBlockBlobFromText(containerName, blobName, text, err => {
       if (err) {
+        defaultLog.error('Error in setBlob', err)
         reject(err)
       } else {
         resolve(blobStatuses.BLOB_CREATED)

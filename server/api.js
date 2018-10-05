@@ -3,7 +3,7 @@ const papaparse = require('papaparse')
 const apiRouter = express.Router()
 
 const getStatusFromJenkins = require('./lib/jenkinsStatus')
-const { getLogs, renewLogs } = require('./lib/canvasImportErrors')
+const { getCanvasLogs, renewCanvasLogs } = require('./lib/canvasImportErrors')
 
 const logToObject = (log) => {
   const lines = log.split('\n').slice(1).join('\n')
@@ -17,6 +17,7 @@ apiRouter.get('/', async (req, res) => {
     const status = await getStatusFromJenkins()
     res.send(status)
   } catch (e) {
+    req.log.error(e)
     res.status(500).send({ status: 500 })
   }
 })
@@ -33,6 +34,7 @@ apiRouter.get('/import-errors', async (req, res) => {
       status
     })
   } catch (e) {
+    req.log.error(e)
     res.status(500).send({ status: 500 })
   }
 })
