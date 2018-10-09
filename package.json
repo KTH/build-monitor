@@ -23,7 +23,7 @@
   "dependencies": {
     "@babel/core": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
-    "@kth/collect_sis_imports_errors": "^1.2.0",
+    "@kth/sis_import_utils": "^1.1.1",
     "azure-storage": "^2.10.1",
     "babel-loader": "^8.0.2",
     "babel-plugin-inferno": "^5.1.0",

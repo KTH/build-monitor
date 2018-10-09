@@ -1,4 +1,4 @@
-const sisUtils = require('@kth/collect_sis_imports_errors/sis_utils')
+const sisUtils = require('@kth/sis_import_utils')
 const moment = require('moment')
 const storage = require('azure-storage')
 const blobService = storage.createBlobService(process.env.AZURE_STORAGE_CONNECTION_STRING)
