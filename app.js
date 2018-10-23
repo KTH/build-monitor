@@ -1,4 +1,3 @@
-'use strict'
 require('dotenv').config()
 const server = require('kth-node-server')
 const express = require('express')

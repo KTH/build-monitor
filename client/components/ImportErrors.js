@@ -89,9 +89,9 @@ export default class ImportErrors extends Component {
           </thead>
           <tbody>
             {
-              this.state.importErrors.map(({sis_import_id, file, message, row}) => (
+              this.state.importErrors.map(({sisImportId, file, message, row}) => (
                 <tr>
-                  <td>{sis_import_id}</td>
+                  <td>{sisImportId}</td>
                   <td>{file}</td>
                   <td>{message}</td>
                   <td>{row}</td>

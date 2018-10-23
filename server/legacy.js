@@ -15,6 +15,8 @@ legacyRouter.get('/test', testEndpoint)
 legacyRouter.get('/builds', testEndpoint)
 legacyRouter.get('/canvas_import_errors', canvasImportErrorsEndpoint)
 
+const newlineRegExp = /\n/g
+
 module.exports = legacyRouter
 
 async function testEndpoint (req, res) {
@@ -67,15 +69,9 @@ async function testEndpoint (req, res) {
 async function canvasImportErrorsEndpoint (req, res) {
   try {
     const cachedLog = canvasImportErrors.getLogs()
-  } catch (e) {
-    log.error('Something went horribly wrong when trying to fetch the blob.')
-    log.error(e)
-    res.send(e)
-  }
+    canvasImportErrors.renewLogs(cachedLog)
 
-  canvasImportErrors.renewLogs(cachedLog)
-
-  res.send(`
+    res.send(`
     <html>
       <head>
         <meta charset=utf-8>
@@ -86,4 +82,9 @@ async function canvasImportErrorsEndpoint (req, res) {
         <h1>Error logs found</h1>
         <p>${cachedLog.log.replace(newlineRegExp, '<br>')}</p>
   `)
+  } catch (e) {
+    log.error('Something went horribly wrong when trying to fetch the blob.')
+    log.error(e)
+    res.send(e)
+  }
 }

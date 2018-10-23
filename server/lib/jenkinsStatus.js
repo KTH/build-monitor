@@ -17,9 +17,9 @@ async function jenkinsApi (url, username, token) {
         'Authorization': 'Basic ' + Buffer.from(username + ':' + token).toString('base64')
       }
     })
-    return data.jobs
+    return data.jobs || []
   } catch (e) {
-    log.error(`Something went wrong while getting data from ${url.split('@')[1]}: `, e)
+    log.error(`Something went wrong while getting data from ${url}: `, e)
     return []
   }
 }

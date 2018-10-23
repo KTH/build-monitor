@@ -1,4 +1,4 @@
-import Inferno from 'inferno'
+import Inferno from 'inferno' // eslint-disable-line
 
 const BuildCard = ({name, color, url}) => (
   <div className='build'>
