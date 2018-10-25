@@ -1,4 +1,5 @@
-FROM node:8.9-wheezy
+FROM kthse/kth-nodejs:9.11.0
+
 
 RUN mkdir -p /npm && \
     mkdir -p /application
