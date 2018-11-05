@@ -12,7 +12,6 @@ const blobStatuses = Object.freeze({
   BLOB_CONTAINER_CREATED: Symbol('blob_container_created'),
   BLOB_CREATED: Symbol('blob_created')
 })
-const newlineRegExp = /\n/g
 const bunyan = require('bunyan')
 const defaultLog = bunyan.createLogger({
   name: 'build-monitor',
@@ -96,15 +95,16 @@ async function renewCanvasLogs (cachedLog, options) {
 
   // Call the function WITHOUT "await"
   // so it executes in the background and we can return a "success"
-  renewLogsAsync(from, now)
+  renewLogsAsync(from, now, { log })
   return 'SUCCESS'
 }
 
-async function renewLogsAsync (from, now) {
+async function renewLogsAsync (from, now, options) {
   // Double check "renewing" to avoid race conditions
   if (renewing) return
 
   renewing = true
+  const log = options.log || defaultLog
   try {
     const latestErrors = await sisUtils.getFilteredErrors(
       process.env.CANVAS_API_BASE_URL,

@@ -1,7 +1,7 @@
 /**
  * Root component of the Application.
  */
-import Inferno from 'inferno'
+import Inferno from 'inferno' // eslint-disable-line
 import Builds from './components/Builds'
 import ImportErrors from './components/ImportErrors'
 

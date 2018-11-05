@@ -1,10 +1,8 @@
-'use strict'
 require('dotenv').config()
 const server = require('kth-node-server')
 const express = require('express')
 const path = require('path')
 
-const legacyRouter = require('./server/legacy')
 const apiRouter = require('./server/api')
 
 const prefix = process.env.PROXY_BASE || ''
@@ -45,7 +43,6 @@ server.use((req, res, next) => {
 server.use(prefix + '/bootstrap', express.static(path.join(__dirname, '/node_modules/bootstrap/dist')))
 server.use(prefix + '/kth-style', express.static(path.join(__dirname, '/node_modules/kth-style/dist')))
 server.use(prefix + '/kth-style2', express.static(path.join(__dirname, '/node_modules/kth-style/build')))
-server.use(prefix, legacyRouter)
 server.use(prefix, express.static('public'))
 server.use(prefix + '/api', apiRouter)
 
