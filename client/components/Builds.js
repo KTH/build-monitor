@@ -11,11 +11,15 @@ export default class Builds extends Component {
       success: true,
       loading: true,
       builds: [
-        'lms-api',
-        'lms-sync-users',
-        'lms-sync-courses',
         'lms-export-results',
-        'social'
+        'lms-export-results-nightly',
+        'lms-sync-users',
+        'lms-sync-users-nightly',
+        'lms-sync-courses',
+        'lms-sync-courses-nightly',
+        'lms-api',
+        'build-monitor',
+        'lms-web'
       ].map(r => ({name: r}))
     }
 

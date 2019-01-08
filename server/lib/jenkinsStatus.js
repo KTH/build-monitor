@@ -34,8 +34,11 @@ async function getStatusFromJenkins () {
   const socialBuilds = jenkinsKTH.filter(j => socialNames.includes(j.name))
   const lmsNames = [
     'lms-export-results',
+    'lms-export-results-nightly',
     'lms-sync-users',
+    'lms-sync-users-nightly',
     'lms-sync-courses',
+    'lms-sync-courses-nightly',
     'lms-api',
     'build-monitor',
     'lms-web'
