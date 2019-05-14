@@ -7,6 +7,7 @@ RUN mkdir -p /npm && \
 # We do this to avoid npm install when we're only changing code
 WORKDIR /npm
 COPY ["package.json", "package.json"]
+COPY ["package-lock.json", "package-lock.json"]
 RUN npm ci --production
 
 # Add the code and copy over the node_modules-catalog
