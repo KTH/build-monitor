@@ -3,7 +3,7 @@ const moment = require('moment')
 const storage = require('azure-storage')
 const blobService = storage.createBlobService(process.env.AZURE_STORAGE_CONNECTION_STRING)
 const containerName = 'elearningbmcontainer'
-const templateFileText = JSON.stringify({timeStamp: 0, log: 'no logs have yet been fetched'})
+const templateFileText = JSON.stringify({ timeStamp: 0, log: 'no logs have yet been fetched' })
 const blobName = 'bmblob'
 const blobStatuses = Object.freeze({
   BLOB_MISSING: Symbol('blob_missing'),
@@ -54,7 +54,7 @@ async function getCanvasLogs (options) {
   })
   if (result === blobStatuses.BLOB_CONTAINER_MISSING) {
     result = await new Promise((resolve, reject) => {
-      blobService.createContainer(containerName, {publicAccessLevel: 'blob'}, err => {
+      blobService.createContainer(containerName, { publicAccessLevel: 'blob' }, err => {
         if (err) {
           reject(err)
         } else {
@@ -114,7 +114,7 @@ async function renewLogsAsync (from, now, options) {
       process.env.UG_USERNAME,
       process.env.UG_PWD
     )
-    await setBlob(JSON.stringify({timeStamp: now, log: latestErrors}))
+    await setBlob(JSON.stringify({ timeStamp: now, log: latestErrors }))
     log.info('Renewed logs in the blob.')
     renewing = false
   } catch (e) {

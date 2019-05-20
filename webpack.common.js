@@ -21,7 +21,7 @@ module.exports = {
               '@babel/preset-env'
             ],
             plugins: [
-              ['babel-plugin-inferno', {imports: true}]
+              ['babel-plugin-inferno', { imports: true }]
             ]
           }
         }
