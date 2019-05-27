@@ -21,35 +21,39 @@
   },
   "homepage": "https://github.com/KTH/build-monitor#readme",
   "dependencies": {
-    "@babel/core": "^7.4.3",
-    "@babel/preset-env": "^7.4.3",
+    "@babel/core": "^7.4.4",
+    "@babel/preset-env": "^7.4.4",
     "@kth/sis_import_utils": "^1.2.2",
     "azure-storage": "^2.10.3",
-    "babel-loader": "^8.0.5",
+    "babel-loader": "^8.0.6",
     "babel-plugin-inferno": "^5.1.0",
     "bootstrap": "^4.3.1",
     "bunyan": "^1.8.12",
     "date-fns": "^1.30.1",
     "dotenv": "^6.2.0",
-    "express": "^4.16.4",
+    "express": "^4.17.0",
+    "got": "^9.6.0",
     "inferno": "^5.6.1",
     "kth-node-server": "^3.1.1",
-    "kth-style": "^3.2.5",
+    "kth-style": "^3.2.8",
     "moment": "^2.24.0",
     "papaparse": "^4.6.3",
     "path": "^0.12.7",
     "popper.js": "^1.15.0",
-    "request": "^2.88.0",
-    "request-promise": "^4.2.4",
     "uglifyjs-webpack-plugin": "^1.3.0",
-    "webpack": "^4.30.0",
-    "webpack-cli": "^3.3.0",
+    "webpack": "^4.31.0",
+    "webpack-cli": "^3.3.2",
     "webpack-merge": "^4.2.1"
   },
   "devDependencies": {
-    "nodemon": "^1.18.11",
+    "nodemon": "^1.19.0",
     "standard": "^12.0.1",
-    "webpack-dev-middleware": "^3.6.2",
-    "webpack-hot-middleware": "^2.24.3"
+    "webpack-dev-middleware": "^3.7.0",
+    "webpack-hot-middleware": "^2.25.0"
+  },
+  "standard":{
+    "ignore": [
+      "client/*"
+    ]
   }
 }

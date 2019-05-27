@@ -1,4 +1,4 @@
-const rp = require('request-promise')
+const got = require('got')
 const bunyan = require('bunyan')
 const logLevel = process.env.BUNYAN_LOG_LEVEL || 'info'
 const log = bunyan.createLogger({
@@ -8,16 +8,14 @@ const log = bunyan.createLogger({
 
 async function jenkinsApi (url, username, token) {
   try {
-    const data = await rp({
+    const { body } = await got({
       url,
-      resolveWithFullResponse: false,
-      method: 'GET',
       json: true,
       headers: {
         'Authorization': 'Basic ' + Buffer.from(username + ':' + token).toString('base64')
       }
     })
-    return data.jobs || []
+    return body.jobs || []
   } catch (e) {
     log.error(`Something went wrong while getting data from ${url}: `, e)
     return []
